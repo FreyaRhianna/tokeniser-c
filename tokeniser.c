@@ -46,18 +46,28 @@ void tokeniser(char *str){
         word = &word[1];
         word[strlen(word) - 1] = '\0';
         assignToken(tail,LITERAL_STRING,word);
+    }else if(!regexec(&regexIdentifier,word,0,NULL,0)){
+        assignToken(tail,IDENTIFIER,word);
+    }else if(!regexec(&regexToken,word,0,NULL,0)){
+        assignToken(tail,TOKEN,word);
     }
 }
 
 
 int main(){
-    char str[] = "\"84\" street";
+    char str[] = "{ alNUm street";
     if(regcomp(&regexInteger, "^[[:digit:]+]",0)){
         exit(1);
     };
     if(regcomp(&regexStringlit,"^\".*\"",0)){
         exit(1);
-    }
+    };
+    if(regcomp(&regexIdentifier,"^[a-z][:alnum:]",0)){
+        exit(1);
+    };
+    if(regcomp(&regexToken,"[^[:alnum:]]",0)){
+        exit(1);
+    };
 
     tokeniser(str);
 }
